@@ -1,5 +1,7 @@
 import openai
 import azure.cognitiveservices.speech as speechsdk
+from azure.ai.textanalytics import TextAnalyticsClient
+from azure.core.credentials import AzureKeyCredential
 from dotenv import load_dotenv
 import os
 
@@ -7,17 +9,29 @@ import os
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 speech_key, service_region = os.getenv("AZURE_SPEECH_KEY"), os.getenv("AZURE_SERVICE_REGION")
+text_analytics_key, text_analytics_endpoint = os.getenv("AZURE_TEXT_ANALYTICS_KEY"), os.getenv("AZURE_TEXT_ANALYTICS_ENDPOINT")
 
 # Initialize Azure Speech Services
 speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region)
 speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config)
 speech_recognizer = speechsdk.SpeechRecognizer(speech_config=speech_config)
 
+# Initialize Azure Text Analytics
+text_analytics_client = TextAnalyticsClient(endpoint=text_analytics_endpoint, credential=AzureKeyCredential(text_analytics_key))
+
+def detect_language(text):
+    response = text_analytics_client.detect_language(documents=[{"id": "1", "text": text}])
+    language = response[0].primary_language.iso6391_name
+    return language
+
 def get_voice_input():
     print("Listening...")
 
     result = speech_recognizer.recognize_once()
     if result.reason == speechsdk.ResultReason.RecognizedSpeech:
+        detected_language = detect_language(result.text)
+        speech_config.speech_recognition_language = detected_language
+        print(f"Detected language: {detected_language}")
         return result.text
     elif result.reason == speechsdk.ResultReason.NoMatch:
         print("No speech could be recognized. Try again.")
