@@ -62,7 +62,7 @@ def speak(text):
 
 if __name__ == "__main__":
     conversation = {}
-    print("Welcome to the GPT-3.5 Chatbot!")
+    print("Welcome to the GPT-3.5 voice chatbot!")
     while True:
         user_input = get_voice_input()
         if user_input:
