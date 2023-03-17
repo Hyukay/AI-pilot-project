@@ -47,6 +47,7 @@ def speak(text):
         return None
 
 if __name__ == "__main__":
+    conversation = {}
     print("Welcome to the GPT-3.5 Chatbot!")
     while True:
         user_input = get_voice_input()
@@ -56,5 +57,8 @@ if __name__ == "__main__":
             chatbot_response = generate_response(prompt)
             print(f"Chatbot: {chatbot_response}")
             speak(chatbot_response)
+
+            # Store the user input and chatbot response in the conversation dictionary
+            conversation[user_input] = chatbot_response
         else:
             print("Please try again.")
