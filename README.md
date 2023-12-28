@@ -14,7 +14,7 @@ This project is a voice-enabled chatbot that uses GPT-3.5 for generating respons
 1. Clone this repository.
 
 ```bash
-git clone https://github.com/your-username/AI-pilot-project.git
+git clone https://github.com/hyukay/AI-pilot-project.git
 cd AI-pilot-project
 ```
 
